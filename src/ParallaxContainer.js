@@ -1,77 +1,70 @@
-const debug = require('debug')('react-parallax-gsap:ParallaxContainer')
+const debug = require('debug')('react-parallax-gsap:ParallaxContainer') // eslint-disable-line
 
-import { TimelineMax } from 'gsap'
+// import autobind from 'autobind-decorator'
+import R from 'ramda'
 import React from 'react'
-import reactGSAPEnhancer from 'react-gsap-enhancer'
 import autobind from 'autobind-decorator'
-import _ from 'lodash'
+import reactGSAPEnhancer from 'react-gsap-enhancer'
+import throttle from 'lodash.throttle'
+import { standardProps, pickStandardProps } from './standardProps'
 
-import { normalizeAndUnitClamp } from './util'
-import {
-  parseKeyframe,
-  keyframeSort,
-  normalizeKeyframes
-} from './keyframes'
+import combineTimelines from './combineTimelines'
 
 @reactGSAPEnhancer()
 export default class ParallaxContainer extends React.Component {
   static propTypes = {
+    ...standardProps,
     children: React.PropTypes.node.isRequired,
-    className: React.PropTypes.string,
-    id: React.PropTypes.string,
     scrollDistance: React.PropTypes.number.isRequired,
-    scrolljack: React.PropTypes.bool,
-    style: React.PropTypes.object
+    scrolljack: React.PropTypes.bool
   }
+
   static defaultProps = {
-    className: '',
-    scrolljack: false,
-    style: {}
-  }
-
-  constructor (props) {
-    super(props)
-    this.state = {registry: [], activeRegistry: []}
+    scrolljack: false
   }
 
   @autobind
-  registerParallaxChild (props) {
-    debug('registerParallaxChild', 'registering a parallax child', props)
-    this.setState(state => {
-      const {registry} = state
-      return {...state, registry: [...registry, props]}
-    })
+  makeStyle () {
+    return {
+      position: 'absolute',
+      top: 0,
+      height: `${this.props.scrollDistance + window.innerHeight}px`,
+      width: '100%'
+    }
   }
 
   @autobind
-  animate (utils) {
-    debug('animating...')
-    const builtTimeline = this.elementObjs.reduce((timeline, elementObj, idx, arr) => {
-      const element = utils.target.findAll({'data-parallax-id': elementObj['data-parallax-id']})
-      const { keyframes } = elementObj
-      const [builtTimeline] = Object.keys(keyframes)
-        .sort(keyframeSort)
-        .reduce(([timeline, prevKey], keyframe, idx, arr) => {
-          if (!prevKey) return [timeline, keyframe]
-          const value = keyframes[keyframe]
-          const prevValue = keyframes[prevKey]
-          const duration = (parseKeyframe(keyframe) - parseKeyframe(prevKey))
-          const offset = 100 - parseKeyframe(prevKey)
-          debug('returning innermost reduce', {value, prevValue, duration, offset})
-          return [timeline.fromTo(element, duration / 100, prevValue, value, `=-${offset / 100}`), keyframe]
-        }, [timeline, null])
-      debug('returning outer reduce', {builtTimeline})
-      return builtTimeline
-    }, new TimelineMax())
-    debug('animated!', {builtTimeline})
-    return builtTimeline
+  registerParallaxChild (timeline) {
+    debug('registering', timeline)
+    this.timelines = R.append(timeline, this.timelines)
+  }
+
+  @autobind
+  addRegisterProp (children) {
+    debug('adding register prop to', {children})
+    return React.Children.map(
+      children,
+      c => React.cloneElement(c, {registerParallaxElement: this.registerParallaxChild})
+    )
+  }
+
+  @autobind
+  timeline (utils) {
+    const timelines = this.timelines
+    debug('making animation source', {utils, timelines})
+    return combineTimelines(timelines)
+  }
+
+  @autobind
+  setupAnimation () {
+    debug('setting up animation')
+    this.animationController = this.addAnimation(this.timeline, {scope: this})
   }
 
   @autobind
   updateAnimation () {
-    const position = normalizeAndUnitClamp(0, this.props.scrollDistance)(window.pageYOffset)
-    const keyframe = position * 1
-    debug('update!', {keyframe, position, scrollDistance: this.props.scrollDistance})
+    const keyframe = 100 * window.scrollY / this.props.scrollDistance
+    debug('updating animation', {keyframe, controller: this.animationController})
     if (this.props.scrolljack) {
       this.animationController.tweenTo(keyframe)
     } else {
@@ -80,52 +73,17 @@ export default class ParallaxContainer extends React.Component {
   }
 
   componentDidMount () {
-    debug('did mount!')
     this.setupAnimation()
-    window.addEventListener('scroll', _.throttle(this.updateAnimation.bind(this), 5))
-  }
-
-  componentDidUpdate () {
-    debug('did update!')
-    this.setupAnimation()
-  }
-
-  @autobind
-  setupAnimation () {
-    debug('Setting up animation!')
-    const { activeRegistry, registry } = this.state
-    if (activeRegistry.length === registry.length) return true
-
-    const eObjs = registry
-    const normalizedElementObjs = eObjs.map(normalizeKeyframes)
-    this.elementObjs = normalizedElementObjs
-
-    this.animationController = this.addAnimation(this.animate, {scope: this})
-
-    setTimeout(() => { window.scrollTo(0, 0); this.updateAnimation() }, 0)
-
-    this.setState({activeRegistry: registry})
-    debug('Set up animation!', {eObjs, normalizedElementObjs, registry})
+    debug('registering scroll handler')
+    window.addEventListener('scroll', throttle(this.updateAnimation, 5))
   }
 
   render () {
-    const children = React.Children.map(this.props.children, c =>
-      React.cloneElement(c, {register: this.registerParallaxChild})
-    )
-
     return (
-      <div
-        className={this.props.className}
-        id={this.props.id}
-        style={{
-          position: 'absolute',
-          top: 0,
-          height: `${this.props.scrollDistance + window.innerHeight}px`,
-          width: '100%',
-          ...this.props.style
-        }}
+      <div {...pickStandardProps(this.props)}
+        style={{...this.makeStyle(), ...this.props.style}}
       >
-        {children}
+        {this.addRegisterProp(this.props.children)}
       </div>
     )
   }

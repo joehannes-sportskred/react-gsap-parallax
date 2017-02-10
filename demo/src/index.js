@@ -1,10 +1,7 @@
 import React from 'react'
 import {render} from 'react-dom'
-import incrementGenerator from 'increment-generator'
 
 import { ParallaxContainer, Parallax } from '../../src'
-
-const generateId = incrementGenerator()
 
 const blockStyle = {
   background: '#666',
@@ -22,7 +19,6 @@ const Demo = () => (
   >
     {/***********************************************/}
     <Parallax
-      data-parallax-id={generateId()}
       style={{top: '50vh'}}
       keyframes={{
         '0%': {left: '-500px'},
@@ -35,7 +31,6 @@ const Demo = () => (
     </Parallax>
     {/***********************************************/}
     <Parallax
-      data-parallax-id={generateId()}
       style={{top: '50vh'}}
       keyframes={{
         '0%': {left: '150%'},

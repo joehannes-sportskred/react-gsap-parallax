@@ -1,5 +1,5 @@
 import ParallaxContainer from './ParallaxContainer'
-import Parallax from './Parallax'
+import ParallaxElement from './ParallaxElement'
 
-export { ParallaxContainer, Parallax }
+export { ParallaxContainer, ParallaxElement, ParallaxElement as Parallax }
 
