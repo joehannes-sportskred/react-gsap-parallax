@@ -52,7 +52,6 @@ export default class ParallaxContainer extends React.Component {
   timeline (utils) {
     const timelines = this.timelines
     debug('making animation source', {utils, timelines})
-    return combineTimelines(timelines)
     return combineTimelines(timelines).duration(1).pause()
   }
 
