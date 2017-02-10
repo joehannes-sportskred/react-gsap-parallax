@@ -1,6 +1,5 @@
 const debug = require('debug')('react-parallax-gsap:ParallaxContainer') // eslint-disable-line
 
-// import autobind from 'autobind-decorator'
 import R from 'ramda'
 import React from 'react'
 import autobind from 'autobind-decorator'
