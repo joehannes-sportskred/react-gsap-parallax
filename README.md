@@ -18,6 +18,14 @@ static defaultProps = {
 }
 ```
 
+If scrolljack is set, the scrollhandler will use [TimelineMax.tweenTo](https://greensock.com/docs/#/HTML5/GSAP/TimelineMax/tweenTo/) rather than [TimelineMax.seek](https://greensock.com/docs/#/HTML5/GSAP/TimelineMax/seek/).
+
+If scrolljack is set to something other than 'true', it's value will be passed into the tweenTo function, for example:
+
+```javascript
+scrolljack={{ease: 'Strong'}}
+```
+
 ## Parallax
 
 ```javascript
@@ -30,4 +38,15 @@ static propTypes = {
 }
 static defaultProps = {}
 ```
+
+Keyframes is an object with parseIntable keys betwene 0 and 100, and values which are passed as 'vars' to [TweenLite.to](https://greensock.com/docs/#/HTML5/GSAP/TweenLite/to/).
+
+```javascript
+keyframes={{
+'0%': {top: '100vh', left: 0, fontSize: '12px'},
+'100%': {top: '0vh', left: 0, fontSize: '36px'}
+}}
+```
+
+
 
