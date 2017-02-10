@@ -15,7 +15,7 @@ export default class ParallaxContainer extends React.Component {
     ...standardProps,
     children: React.PropTypes.node.isRequired,
     scrollDistance: React.PropTypes.number.isRequired,
-    scrolljack: React.PropTypes.bool
+    scrolljack: React.PropTypes.any
   }
 
   static defaultProps = {
@@ -67,7 +67,8 @@ export default class ParallaxContainer extends React.Component {
   seek (keyframe) {
     debug(`seeking animation to ${keyframe}`, {keyframe, controller: this.animationController})
     if (this.props.scrolljack) {
-      this.animationController.tweenTo(keyframe)
+      if (this.props.scrolljack === true) this.animationController.tweenTo(keyframe)
+      this.animationController.pause().tweenTo(keyframe, this.props.scrolljack)
     } else {
       this.animationController.seek(keyframe).pause()
     }
