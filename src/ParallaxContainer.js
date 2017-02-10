@@ -26,9 +26,10 @@ export default class ParallaxContainer extends React.Component {
   makeStyle () {
     return {
       position: 'absolute',
+      left: 0,
       top: 0,
       height: `${this.props.scrollDistance + window.innerHeight}px`,
-      width: '100%'
+      width: '100vw'
     }
   }
 
