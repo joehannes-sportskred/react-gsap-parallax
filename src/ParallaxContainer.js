@@ -64,9 +64,8 @@ export default class ParallaxContainer extends React.Component {
   }
 
   @autobind
-  updateAnimation () {
-    const keyframe = 100 * window.scrollY / this.props.scrollDistance
-    debug('updating animation', {keyframe, controller: this.animationController})
+  seek (keyframe) {
+    debug(`seeking animation to ${keyframe}`, {keyframe, controller: this.animationController})
     if (this.props.scrolljack) {
       this.animationController.tweenTo(keyframe)
     } else {
@@ -74,10 +73,16 @@ export default class ParallaxContainer extends React.Component {
     }
   }
 
+  @autobind
+  handleScroll () {
+    debug('running scroll handler')
+    this.seek(100 * window.scrollY / this.props.scrollDistance)
+  }
+
   componentDidMount () {
+    debug('component did mount')
     this.setupAnimation()
-    debug('registering scroll handler')
-    window.addEventListener('scroll', throttle(this.updateAnimation, 5))
+    window.addEventListener('scroll', throttle(this.handleScroll, 16))
   }
 
   render () {
