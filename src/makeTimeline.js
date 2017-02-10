@@ -79,29 +79,29 @@ const log = msg => R.tap(v => debug(msg, v))
  */
 
 const normalizeKeyframes = R.pipe(
-  log('normalizing')
-  
+  log('normalizing'),
+
   R.toPairs,
   log('made pairs'),
-  
+
   R.map(R.adjust(parseFloat, 0)),
   log('made float'),
-  
+
   sort,
-  log('sorted', v),
-  
+  log('sorted'),
+
   checkDomain,
   log('validated domain'),
-    
+
   addEnds,
   log('added ends'),
-  
+
   toObjects,
   log('made objects'),
-  
+
   addDurations,
   log('added durations'),
-  
+
   log('normalized')
 )
 
