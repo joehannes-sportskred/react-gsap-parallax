@@ -99,13 +99,14 @@ const normalizeKeyframes = R.pipe(
 
 const makeTimeline = R.curry(
   (keyframes, element) => {
-    const [head, ...tail] = normalizeKeyframes(keyframes)
-    debug('making timeline', {head, tail})
+    const normalizedKeyframeArray = normalizeKeyframes(keyframes)
+    const [head, ...tail] = normalizedKeyframeArray
+    debug('making timeline', {head, tail, keyframes, normalizedKeyframeArray})
     return tail.reduce(
-      (timeline, keyframe, index, keyframes) => {
+      (timeline, keyframe, index) => {
         const {value} = keyframe
-        const previousKeyframe = keyframes[index]
-        debug('making keyframe', {previousKeyframe, value, element, keyframe})
+        const previousKeyframe = normalizedKeyframeArray[index]
+        debug('adding keyframe to timeline', {previousKeyframe, value, element, keyframe})
         return timeline.to(element, previousKeyframe.duration, value)
       },
       new TimelineLite().to(element, 0, head.value)
