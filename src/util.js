@@ -25,3 +25,7 @@ export const normalizeAndUnitClamp = (min, max) => {
   )
 }
 
+export const percentBetweenZeroAndAHundred = /^(0|(?:\d{1,2}|100)(?:\.\d*)?)%$/
+
+export const deepClone = v => JSON.parse(JSON.stringify(v))
+

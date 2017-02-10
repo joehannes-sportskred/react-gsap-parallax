@@ -1,37 +1,17 @@
+const debug = require('debug')('react-parallax-gsap:ParallaxContainer')
+
 import { TimelineMax } from 'gsap'
 import React from 'react'
 import reactGSAPEnhancer from 'react-gsap-enhancer'
-import { normalizeAndUnitClamp } from './util'
 import autobind from 'autobind-decorator'
 import _ from 'lodash'
 
-const percentBetweenZeroAndAHundred = /^(0|(?:\d{1,2}|100)(?:\.\d*)?)%$/
-const parseKeyframe = keyframe => {
-  if (!percentBetweenZeroAndAHundred.test(keyframe)) throw new Error(`${keyframe} is not a valid keyframe`)
-  return JSON.parse(percentBetweenZeroAndAHundred.exec(keyframe)[1])
-}
-const writeKeyframe = keyframe => `${keyframe}%`
-
-const keyframeSort = (_a, _b) => {
-  const a = parseKeyframe(_a)
-  const b = parseKeyframe(_b)
-  if (a < b) return -1
-  if (a > b) return 1
-  return 0
-}
-
-const normalizeKeyframes = e => {
-  const el = {...e}
-  const has = k => _.has(el, k)
-  const get = k => _.get(el, k)
-  if (!has('keyframes')) { console.log(e); throw new Error('no keyframes provided') }
-  const keyframes = get('keyframes')
-  const keys = Object.keys(keyframes).sort(keyframeSort)
-  if (keys.length === 0) { console.log(e); throw new Error('no keyframes provided') }
-  if (!has(['keyframes', writeKeyframe(0)])) el.keyframes[writeKeyframe(0)] = keyframes[_.first(keys)]
-  if (!has(['keyframes', writeKeyframe(100)])) el.keyframes[writeKeyframe(100)] = keyframes[_.last(keys)]
-  return el
-}
+import { normalizeAndUnitClamp } from './util'
+import {
+  parseKeyframe,
+  keyframeSort,
+  normalizeKeyframes
+} from './keyframes'
 
 @reactGSAPEnhancer()
 export default class ParallaxContainer extends React.Component {
@@ -56,6 +36,7 @@ export default class ParallaxContainer extends React.Component {
 
   @autobind
   registerParallaxChild (props) {
+    debug('registerParallaxChild', 'registering a parallax child', props)
     this.setState(state => {
       const {registry} = state
       return {...state, registry: [...registry, props]}
@@ -64,6 +45,7 @@ export default class ParallaxContainer extends React.Component {
 
   @autobind
   animate (utils) {
+    debug('animating...')
     const builtTimeline = this.elementObjs.reduce((timeline, elementObj, idx, arr) => {
       const element = utils.target.findAll({'data-parallax-id': elementObj['data-parallax-id']})
       const { keyframes } = elementObj
@@ -75,10 +57,13 @@ export default class ParallaxContainer extends React.Component {
           const prevValue = keyframes[prevKey]
           const duration = (parseKeyframe(keyframe) - parseKeyframe(prevKey))
           const offset = 100 - parseKeyframe(prevKey)
+          debug('returning innermost reduce', {value, prevValue, duration, offset})
           return [timeline.fromTo(element, duration / 100, prevValue, value, `=-${offset / 100}`), keyframe]
         }, [timeline, null])
+      debug('returning outer reduce', {builtTimeline})
       return builtTimeline
     }, new TimelineMax())
+    debug('animated!', {builtTimeline})
     return builtTimeline
   }
 
@@ -86,6 +71,7 @@ export default class ParallaxContainer extends React.Component {
   updateAnimation () {
     const position = normalizeAndUnitClamp(0, this.props.scrollDistance)(window.pageYOffset)
     const keyframe = position * 1
+    debug('update!', {keyframe, position, scrollDistance: this.props.scrollDistance})
     if (this.props.scrolljack) {
       this.animationController.tweenTo(keyframe)
     } else {
@@ -94,16 +80,19 @@ export default class ParallaxContainer extends React.Component {
   }
 
   componentDidMount () {
+    debug('did mount!')
     this.setupAnimation()
     window.addEventListener('scroll', _.throttle(this.updateAnimation.bind(this), 5))
   }
 
   componentDidUpdate () {
+    debug('did update!')
     this.setupAnimation()
   }
 
   @autobind
   setupAnimation () {
+    debug('Setting up animation!')
     const { activeRegistry, registry } = this.state
     if (activeRegistry.length === registry.length) return true
 
@@ -116,6 +105,7 @@ export default class ParallaxContainer extends React.Component {
     setTimeout(() => { window.scrollTo(0, 0); this.updateAnimation() }, 0)
 
     this.setState({activeRegistry: registry})
+    debug('Set up animation!', {eObjs, normalizedElementObjs, registry})
   }
 
   render () {
