@@ -69,6 +69,8 @@ const addDurations = _keyframes => {
   })
 }
 
+const log = msg => R.tap(v => debug(msg, v))
+
 /**
  * Turn a keyframes object into an array of objects
  *
@@ -77,21 +79,30 @@ const addDurations = _keyframes => {
  */
 
 const normalizeKeyframes = R.pipe(
-  R.tap(v => debug('normalizing', v)),
+  log('normalizing')
+  
   R.toPairs,
-  R.tap(v => debug('made pairs', v)),
+  log('made pairs'),
+  
   R.map(R.adjust(parseFloat, 0)),
-  R.tap(v => debug('made float', v)),
+  log('made float'),
+  
   sort,
-  R.tap(v => debug('sorted', v)),
+  log('sorted', v),
+  
   checkDomain,
+  log('validated domain'),
+    
   addEnds,
-  R.tap(v => debug('added ends', v)),
+  log('added ends'),
+  
   toObjects,
-  R.tap(v => debug('made objects', v)),
+  log('made objects'),
+  
   addDurations,
-  R.tap(v => debug('added durations', v)),
-  R.tap(v => debug('normalized', v))
+  log('added durations'),
+  
+  log('normalized')
 )
 
 /**
