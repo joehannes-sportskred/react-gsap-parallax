@@ -8,16 +8,6 @@ import { TimelineLite } from 'gsap'
  * @param {Object} value - passed directly into gsap
  */
 
-/**
- * Turn an array of keyframes into a gsap timeline.
- *
- * curried -- if you just pass keyframes, you get a function that accepts an element
- *
- * @param {element} element
- * @param {Array<keyframe>} keyframes
- * @return {TimelineLite} timeline - duration 100
- */
-
 const sort = R.sortBy(R.nth(0))
 
 const checkDomain = (() => {
@@ -79,6 +69,13 @@ const addDurations = _keyframes => {
   })
 }
 
+/**
+ * Turn a keyframes object into an array of objects
+ *
+ * @param {Array<keyframe>} keyframes
+ * @return {Array<Object>} normalizedKeyframes - array of objects with keys: 'value', 'key', 'duration'
+ */
+
 const normalizeKeyframes = R.pipe(
   R.tap(v => debug('normalizing', v)),
   R.toPairs,
@@ -96,6 +93,16 @@ const normalizeKeyframes = R.pipe(
   R.tap(v => debug('added durations', v)),
   R.tap(v => debug('normalized', v))
 )
+
+/**
+ * Turn an array of keyframes into a gsap timeline.
+ *
+ * curried -- if you just pass keyframes, you get a function that accepts an element
+ *
+ * @param {element} element
+ * @param {Array<keyframe>} keyframes
+ * @return {TimelineLite} timeline - duration 100
+ */
 
 const makeTimeline = R.curry(
   (keyframes, element) => {
