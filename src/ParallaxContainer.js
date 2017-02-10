@@ -53,12 +53,14 @@ export default class ParallaxContainer extends React.Component {
     const timelines = this.timelines
     debug('making animation source', {utils, timelines})
     return combineTimelines(timelines)
+    return combineTimelines(timelines).duration(1).pause()
   }
 
   @autobind
   setupAnimation () {
     debug('setting up animation')
     this.animationController = this.addAnimation(this.timeline, {scope: this})
+    this.animationController.seek(0)
   }
 
   @autobind
