@@ -95,7 +95,7 @@ const normalizeKeyframes = R.pipe(
 )
 
 /**
- * Turn an array of keyframes into a gsap timeline.
+ * Turn a keyframes object into a gsap timeline
  *
  * curried -- if you just pass keyframes, you get a function that accepts an element
  *
