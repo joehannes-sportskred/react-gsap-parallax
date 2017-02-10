@@ -2,6 +2,13 @@
 
 [try it out on codepen](http://codepen.io/amonks/pen/EZddOX)
 
+to run the demos, clone this, then
+
+```bash
+$ npm install
+$ npm run start
+```
+
 ## ParallaxContainer
 
 ```javascript
