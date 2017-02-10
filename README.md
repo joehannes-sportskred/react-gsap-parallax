@@ -9,6 +9,8 @@ $ npm install
 $ npm run start
 ```
 
+run `localStorage.debug = 'react-gsap-parallax*'` in your console to see logging
+
 ## ParallaxContainer
 
 ```javascript
