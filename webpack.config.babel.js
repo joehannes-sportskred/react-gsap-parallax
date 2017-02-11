@@ -28,7 +28,7 @@ const common = R.pipe(
   addProgress,
   addExtern('react', 'React'),
   addExtern('react', 'React'),
-  addGlobal('TimellineMax'),
+  addGlobal('TimelineMax'),
   addGlobal('TimelineLite'),
   addName(packageName)
 )(base)
