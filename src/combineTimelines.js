@@ -1,4 +1,4 @@
-import { TimelineMax } from 'gsap'
+import TimelineMax from 'TimelineMax'
 
 const combineTimelines = (timelines) => {
   const masterTimeline = new TimelineMax()
