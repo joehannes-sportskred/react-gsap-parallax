@@ -3,13 +3,14 @@ import { resolve } from 'path'
 
 import {
   addBabel,
+  addCJS2,
   addExtern,
-  addSourcemap,
+  addGlobal,
   addMinify,
   addName,
   addProduction,
   addProgress,
-  addCJS2,
+  addSourcemap,
   addUMD,
   base
 } from '@amonks/webpack-helpers'
@@ -26,7 +27,9 @@ const common = R.pipe(
   addBabel,
   addProgress,
   addExtern('react', 'React'),
-  addExtern('gsap', 'TweenMax'),
+  addExtern('react', 'React'),
+  addGlobal('TimellineMax'),
+  addGlobal('TimelineLite'),
   addName(packageName)
 )(base)
 

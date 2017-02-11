@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@amonks/webpack-helpers@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@amonks/webpack-helpers/-/webpack-helpers-1.0.1.tgz#a5b79d7b17fae753fe513f7fa1b07c68733c9b3f"
+"@amonks/webpack-helpers@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@amonks/webpack-helpers/-/webpack-helpers-1.1.0.tgz#e122781a7d4d0d574ae17886e9da73b3ae18fb6f"
   dependencies:
     babel-runtime "^6.22.0"
     progress-bar-webpack-plugin "^1.9.3"
