@@ -2,15 +2,13 @@ const debug = require('debug')('react-parallax-gsap:ParallaxContainer') // eslin
 
 import R from 'ramda'
 import React from 'react'
-import autobind from 'autobind-decorator'
 import reactGSAPEnhancer from 'react-gsap-enhancer'
 import throttle from 'lodash.throttle'
 import { standardProps, pickStandardProps } from './standardProps'
 
 import combineTimelines from './combineTimelines'
 
-@reactGSAPEnhancer()
-export default class ParallaxContainer extends React.Component {
+class ParallaxContainer extends React.Component {
   static propTypes = {
     ...standardProps,
     children: React.PropTypes.node.isRequired,
@@ -22,9 +20,20 @@ export default class ParallaxContainer extends React.Component {
     scrolljack: false
   }
 
-  @autobind
+  constructor (props) {
+    super(props)
+    this.makeStyle = this.makeStyle.bind(this)
+    this.registerParallaxChild = this.registerParallaxChild.bind(this)
+    this.addRegisterProp = this.addRegisterProp.bind(this)
+    this.timeline = this.timeline.bind(this)
+    this.setupAnimation = this.setupAnimation.bind(this)
+    this.seek = this.seek.bind(this)
+    this.handleScroll = this.handleScroll.bind(this)
+  }
+
   makeStyle () {
     return {
+      overflow: 'hidden',
       position: 'absolute',
       left: 0,
       top: 0,
@@ -33,13 +42,11 @@ export default class ParallaxContainer extends React.Component {
     }
   }
 
-  @autobind
   registerParallaxChild (timeline) {
     debug('registering', timeline)
     this.timelines = R.append(timeline, this.timelines)
   }
 
-  @autobind
   addRegisterProp (children) {
     debug('adding register prop to', {children})
     return React.Children.map(
@@ -48,21 +55,18 @@ export default class ParallaxContainer extends React.Component {
     )
   }
 
-  @autobind
   timeline (utils) {
     const timelines = this.timelines
     debug('making animation source', {utils, timelines})
     return combineTimelines(timelines).duration(1).pause()
   }
 
-  @autobind
   setupAnimation () {
     debug('setting up animation')
     this.animationController = this.addAnimation(this.timeline, {scope: this})
     this.animationController.seek(0)
   }
 
-  @autobind
   seek (keyframe) {
     debug(`seeking animation to ${keyframe}`, {keyframe, controller: this.animationController})
     if (this.props.scrolljack) {
@@ -73,7 +77,6 @@ export default class ParallaxContainer extends React.Component {
     }
   }
 
-  @autobind
   handleScroll () {
     debug('running scroll handler')
     this.seek(100 * window.scrollY / this.props.scrollDistance)
@@ -87,12 +90,16 @@ export default class ParallaxContainer extends React.Component {
 
   render () {
     return (
-      <div {...pickStandardProps(this.props)}
-        style={{...this.makeStyle(), ...this.props.style}}
-      >
-        {this.addRegisterProp(this.props.children)}
+      <div style={this.constructor.containerStyle}>
+        <div {...pickStandardProps(this.props)}
+          style={{...this.makeStyle(), ...this.props.style}}
+        >
+          {this.addRegisterProp(this.props.children)}
+        </div>
       </div>
     )
   }
 }
+
+export default reactGSAPEnhancer(ParallaxContainer)
 
