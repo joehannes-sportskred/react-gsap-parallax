@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ParallaxContainer, Parallax } from '../../src/'
+import { ParallaxContainer, Parallax } from '../src/'
 
 export default () => (
   <ParallaxContainer

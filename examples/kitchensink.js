@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Strong, Linear } from 'gsap'
-import { ParallaxContainer, Parallax } from '../../src'
+import { ParallaxContainer, Parallax } from '../src/'
 
 export default () => (
   <ParallaxContainer

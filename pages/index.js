@@ -1,15 +1,6 @@
 import React from 'react'
-import {render} from 'react-dom'
 
-import Basic from './basic'
-import KitchenSink from './kitchensink'
-import Scrolljack from './scrolljack'
-
-const examples = {
-  Basic,
-  KitchenSink,
-  Scrolljack
-}
+import * as examples from '../examples/'
 
 const ExampleLinks = ({onChange}) => (
   <ul style={{position: 'fixed', zIndex: 100}}>
@@ -24,7 +15,7 @@ const ExampleLinks = ({onChange}) => (
   </ul>
 )
 
-class Demo extends React.Component {
+export default class Demo extends React.Component {
   render () {
     const Example = this.state && this.state.example
       ? examples[this.state.example]
@@ -38,6 +29,4 @@ class Demo extends React.Component {
     )
   }
 }
-
-render(<Demo />, document.querySelector('#demo'))
 
