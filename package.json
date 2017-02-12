@@ -64,8 +64,5 @@
     "require": [
       "babel-register"
     ]
-  },
-  "release": {
-    "verifyRelease": "cracks"
   }
 }
