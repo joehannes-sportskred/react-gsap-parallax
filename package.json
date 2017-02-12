@@ -15,7 +15,7 @@
     "build:lib": "webpack --config lib.webpack.config.babel.js",
     "demo": "serve demo",
     "dev": "run-p watch:demo watch:lib demo",
-    "postpublish": "now demo/ --static",
+    "postpublish": "now demo/ --static -t $NOW_TOKEN",
     "pretest": "yarn build",
     "test": "ava",
     "watch:demo": "webpack --watch --config demo.webpack.config.babel.js",
