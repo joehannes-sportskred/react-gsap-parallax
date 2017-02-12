@@ -1,5 +1,5 @@
+/* global TimelineLite */
 const debug = require('debug')('react-gsap-parallax:makeTimeline')
-import TimelineLite from 'TimelineLite'
 import R from 'ramda'
 
 import normalizeKeyframes from './normalizeKeyframes'

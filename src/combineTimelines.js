@@ -1,4 +1,4 @@
-import TimelineMax from 'TimelineMax'
+/* global TimelineMax */
 
 const combineTimelines = (timelines) => {
   const masterTimeline = new TimelineMax()

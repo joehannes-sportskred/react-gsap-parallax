@@ -2,7 +2,7 @@
   "name": "react-gsap-parallax",
   "version": "1.2.4",
   "description": "react-gsap-parallax React component",
-  "main": "lib/react-gsap-parallax.js",
+  "main": "umd/react-gsap-parallax.js",
   "module": "es/react-gsap-parallax.js",
   "files": [
     "es",
@@ -10,13 +10,16 @@
     "umd"
   ],
   "scripts": {
-    "dev": "next",
-    "build": "webpack",
-    "clean": "nwb clean-module && npm clean-demo",
-    "start": "nwb serve-react-demo",
+    "build": "yarn build:lib && yarn build:demo",
+    "build:demo": "webpack --config demo.webpack.config.babel.js",
+    "build:lib": "webpack --config lib.webpack.config.babel.js",
+    "demo": "serve demo",
+    "dev": "run-p watch:demo watch:lib demo",
+    "postpublish": "now demo/ --static",
     "pretest": "yarn build",
     "test": "ava",
-    "postversion": "yarn && yarn build"
+    "watch:demo": "webpack --watch --config demo.webpack.config.babel.js",
+    "watch:lib": "webpack --watch --config lib.webpack.config.babel.js"
   },
   "dependencies": {
     "debug": "^2.6.0",
@@ -29,19 +32,21 @@
     "react": ""
   },
   "devDependencies": {
-    "@amonks/webpack-helpers": "^1.1.0",
+    "@amonks/webpack-helpers": "2.0.0",
     "ava": "^0.18.1",
     "babel-cli": "^6.22.2",
+    "babel-loader": "^6.2.10",
     "babel-plugin-transform-runtime": "^6.22.0",
     "babel-preset-latest": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
     "babel-preset-stage-1": "^6.22.0",
     "babel-runtime": "^6.22.0",
-    "gsap": "^1.19.1",
-    "next": "2.0.0-beta.24",
-    "nwb": "0.14.x",
+    "now": "^4.3.0",
+    "npm-run-all": "^4.0.1",
     "progress-bar-webpack-plugin": "^1.9.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "serve": "^3.2.10",
     "webpack": "^2.2.1"
   },
   "author": "Andrew J. Monks <a@monks.co>",

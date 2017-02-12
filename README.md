@@ -1,6 +1,7 @@
 # react-gsap-parallax
 
 [try it out on codepen](http://codepen.io/amonks/pen/EZddOX)
+[check out the examples](https://react-gsap-parallax.now.sh)
 
 to run the demos, clone this, then
 

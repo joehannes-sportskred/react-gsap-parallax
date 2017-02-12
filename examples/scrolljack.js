@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ParallaxContainer, Parallax } from '../src/'
+import { ParallaxContainer, Parallax } from '../umd/react-gsap-parallax'
 
 export default () => (
   <ParallaxContainer
