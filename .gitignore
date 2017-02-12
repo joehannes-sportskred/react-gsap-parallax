@@ -3,4 +3,5 @@ es
 lib
 umd
 demo/demo.js
+demo/demo.js.map
 *.log
