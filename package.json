@@ -1,6 +1,6 @@
 {
   "name": "react-gsap-parallax",
-  "version": "1.2.5",
+  "version": "0.0.0-development",
   "description": "react-gsap-parallax React component",
   "main": "umd/react-gsap-parallax.js",
   "module": "es/react-gsap-parallax.js",
@@ -19,7 +19,8 @@
     "pretest": "yarn build",
     "test": "ava",
     "watch:demo": "webpack --watch --config demo.webpack.config.babel.js",
-    "watch:lib": "webpack --watch --config lib.webpack.config.babel.js"
+    "watch:lib": "webpack --watch --config lib.webpack.config.babel.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
     "debug": "^2.6.0",
@@ -46,6 +47,7 @@
     "progress-bar-webpack-plugin": "^1.9.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "semantic-release": "^6.3.2",
     "serve": "^3.2.10",
     "webpack": "^2.2.1"
   },
@@ -61,5 +63,8 @@
     "require": [
       "babel-register"
     ]
+  },
+  "release": {
+    "verifyRelease": "cracks"
   }
 }
