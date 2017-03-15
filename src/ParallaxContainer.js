@@ -1,8 +1,6 @@
 const debug = require('debug')('react-parallax-gsap:ParallaxContainer') // eslint-disable-line
 
-import R from 'ramda'
 import React from 'react'
-import reactGSAPEnhancer from 'react-gsap-enhancer'
 import throttle from 'lodash.throttle'
 import { standardProps, pickStandardProps } from './standardProps'
 
@@ -44,7 +42,9 @@ class ParallaxContainer extends React.Component {
 
   registerParallaxChild (timeline) {
     debug('registering', timeline)
-    this.timelines = R.append(timeline, this.timelines)
+    this.timelines = this.timelines
+      ? [...this.timelines, timeline]
+      : [timeline]
   }
 
   addRegisterProp (children) {
@@ -55,15 +55,15 @@ class ParallaxContainer extends React.Component {
     )
   }
 
-  timeline (utils) {
+  timeline () {
     const timelines = this.timelines
-    debug('making animation source', {utils, timelines})
     return combineTimelines(timelines).duration(1).pause()
   }
 
   setupAnimation () {
     debug('setting up animation')
-    this.animationController = this.addAnimation(this.timeline, {scope: this})
+    this.animationController = this.timeline()
+    console.log('animationController', this.animationController)
     this.animationController.seek(0)
   }
 
@@ -101,5 +101,5 @@ class ParallaxContainer extends React.Component {
   }
 }
 
-export default reactGSAPEnhancer(ParallaxContainer)
+export default ParallaxContainer
 
