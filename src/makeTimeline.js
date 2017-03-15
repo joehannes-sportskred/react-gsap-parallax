@@ -51,10 +51,15 @@ const makeTimeline = R.curry(
     debug('making timeline', {head, tail, keyframes, normalizedKeyframeArray})
     return tail.reduce(
       (timeline, keyframe, index) => {
-        const {value} = keyframe
+        const {value: {cache, ...value}} = keyframe
         const previousKeyframe = normalizedKeyframeArray[index]
         debug('adding keyframe to timeline', {previousKeyframe, value, element, keyframe})
-        return timeline.to(element, previousKeyframe.duration, value)
+        if (cache) {
+          return timeline.to(element, previousKeyframe.duration, value)
+            .to(element, 0, {willChange: 'transform'})
+        } else {
+          return timeline.to(element, previousKeyframe.duration, value)
+        }
       },
       new TimelineLite().to(element, 0, head.value)
     )
