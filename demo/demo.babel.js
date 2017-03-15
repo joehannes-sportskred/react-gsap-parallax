@@ -2,8 +2,6 @@ import React from 'react'
 import { render } from 'react-dom'
 import * as examples from '../examples/'
 
-console.log({examples})
-
 window.gsap = {
   TimelineMax: window.TimelineMax,
   TimelineLite: window.TimelineLite
@@ -27,7 +25,6 @@ const ExampleLinks = ({onChange, examples}) => {
 export default class Demo extends React.Component {
   render () {
     const { examples } = this.props
-    console.log(examples)
     const Example = this.state && this.state.example
       ? examples[this.state.example]
       : null

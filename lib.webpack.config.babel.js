@@ -53,7 +53,7 @@ const config = [
   )(base)
 ]
 
-console.log(JSON.stringify(config, undefined, 2))
+// console.log(JSON.stringify(config, undefined, 2))
 
 export default config
 
