@@ -9,7 +9,8 @@ export default class ParallaxElement extends React.Component {
     ...standardProps,
     children: React.PropTypes.node.isRequired,
     keyframes: React.PropTypes.object.isRequired,
-    registerParallaxChild: React.PropTypes.func
+    registerParallaxChild: React.PropTypes.func,
+    cache: React.PropTypes.bool
   }
 
   register () {
@@ -31,7 +32,11 @@ export default class ParallaxElement extends React.Component {
   render () {
     return (
       <div {...pickStandardProps(this.props)}
-        style={{position: 'fixed', ...this.props.style}}
+        style={{
+          position: 'fixed',
+          ...this.props.style,
+          ...{ willCache: this.props.cache ? 'transform' : 'auto' }
+        }}
         ref={element => { this.element = element }}
       >
         {this.props.children}
