@@ -26,7 +26,7 @@ class ParallaxContainer extends React.Component {
     super(props)
     this.addChildProps = this.addChildProps.bind(this)
     this.getPosition = this.getPosition.bind(this)
-    this.handleScroll = this.handleScroll.bind(this)
+    this.handleScroll = throttle(this.handleScroll.bind(this), 16)
     this.makeChildStyle = this.makeChildStyle.bind(this)
     this.makeColumnStyle = this.makeColumnStyle.bind(this)
     this.makeStyle = this.makeStyle.bind(this)
@@ -161,7 +161,11 @@ class ParallaxContainer extends React.Component {
   componentDidMount () {
     debug('component did mount')
     this.setupAnimation()
-    window.addEventListener('scroll', throttle(this.handleScroll, 16))
+    window.addEventListener('scroll', this.handleScroll)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 
   render () {
