@@ -122,7 +122,9 @@ class ParallaxContainer extends React.Component {
         ? this.props.top + this.props.height
         : this.props.top,
       left: 0,
-      height: window.innerHeight,
+      height: typeof window !== 'undefined'
+        ? window.innerHeight
+        : this.props.height,
       width: '100vw'
     }
   }
