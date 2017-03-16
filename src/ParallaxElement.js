@@ -7,7 +7,7 @@ import { standardProps, pickStandardProps } from './standardProps'
 export default class ParallaxElement extends React.Component {
   static propTypes = {
     ...standardProps,
-    children: React.PropTypes.node.isRequired,
+    children: React.PropTypes.node,
     keyframes: React.PropTypes.object.isRequired,
     registerParallaxChild: React.PropTypes.func.isRequired,
     cache: React.PropTypes.bool,
