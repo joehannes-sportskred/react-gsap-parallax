@@ -9,8 +9,22 @@ export default class ParallaxElement extends React.Component {
     ...standardProps,
     children: React.PropTypes.node.isRequired,
     keyframes: React.PropTypes.object.isRequired,
-    registerParallaxChild: React.PropTypes.func,
-    cache: React.PropTypes.bool
+    registerParallaxChild: React.PropTypes.func.isRequired,
+    cache: React.PropTypes.bool,
+    parallaxStyle: React.PropTypes.object
+  }
+
+  static defaultProps = {
+    cache: false,
+    parallaxStyle: {},
+    registerParallaxChild: () => {
+      throw Error('trying to register a parallax child before mount! not cool!')
+    }
+  }
+
+  constructor (props) {
+    super(props)
+    this.register = this.register.bind(this)
   }
 
   register () {
@@ -18,11 +32,6 @@ export default class ParallaxElement extends React.Component {
     const { keyframes } = this.props
     const timeline = makeTimeline(keyframes, this.element)
     this.props.registerParallaxElement(timeline)
-  }
-
-  constructor (props) {
-    super(props)
-    this.register = this.register.bind(this)
   }
 
   componentDidMount () {
@@ -33,8 +42,8 @@ export default class ParallaxElement extends React.Component {
     return (
       <div {...pickStandardProps(this.props)}
         style={{
-          position: 'fixed',
           ...this.props.style,
+          ...this.props.parallaxStyle,
           ...{ willCache: this.props.cache ? 'transform' : 'auto' }
         }}
         ref={element => { this.element = element }}

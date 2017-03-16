@@ -10,32 +10,119 @@ class ParallaxContainer extends React.Component {
   static propTypes = {
     ...standardProps,
     children: React.PropTypes.node.isRequired,
-    scrollDistance: React.PropTypes.number.isRequired,
-    scrolljack: React.PropTypes.any
+    top: React.PropTypes.number,
+    height: React.PropTypes.number.isRequired,
+    scrolljack: React.PropTypes.bool,
+    onScroll: React.PropTypes.func
   }
 
   static defaultProps = {
-    scrolljack: false
+    scrolljack: false,
+    top: 0,
+    onScroll: x => x
   }
 
   constructor (props) {
     super(props)
+    this.addChildProps = this.addChildProps.bind(this)
+    this.getPosition = this.getPosition.bind(this)
+    this.handleScroll = this.handleScroll.bind(this)
+    this.makeChildStyle = this.makeChildStyle.bind(this)
+    this.makeColumnStyle = this.makeColumnStyle.bind(this)
     this.makeStyle = this.makeStyle.bind(this)
     this.registerParallaxChild = this.registerParallaxChild.bind(this)
-    this.addRegisterProp = this.addRegisterProp.bind(this)
-    this.timeline = this.timeline.bind(this)
-    this.setupAnimation = this.setupAnimation.bind(this)
     this.seek = this.seek.bind(this)
-    this.handleScroll = this.handleScroll.bind(this)
+    this.setupAnimation = this.setupAnimation.bind(this)
+    this.timeline = this.timeline.bind(this)
+    this.state = {
+      position: 'top'
+    }
+  }
+
+  addChildProps (children) {
+    debug('adding register prop to', {children})
+    return React.Children.map(
+      children,
+      c => {
+        if (c.type.name !== 'ParallaxElement') return c
+        return React.cloneElement(c, {
+          registerParallaxElement: this.registerParallaxChild,
+          parallaxStyle: this.makeChildStyle()
+        })
+      }
+    )
+  }
+
+  getPosition () {
+    debug('get position')
+    const { height, top } = this.props
+
+    if (typeof document === 'undefined') return top
+
+    const scrollPosition = document.body.scrollTop
+    if (scrollPosition < top) return 'top'
+    if (scrollPosition > (top + height)) return 'bottom'
+    return 'active'
+  }
+
+  handleScroll () {
+    debug('running scroll handler')
+    const oldPosition = this.state.position
+    const position = this.getPosition()
+    if (position !== oldPosition) this.setState({position})
+    if (position === 'active') {
+      const progress = (window.scrollY - this.props.top) / this.props.height
+      this.seek(100 * progress)
+      this.props.onScroll(progress)
+    }
+  }
+
+  makeChildStyle () {
+    const position = this.getPosition()
+    debug(`make child style for position: "${position}"`)
+
+    if (position === 'top') {
+      return {
+        position: 'absolute'
+      }
+    }
+
+    if (position === 'bottom') {
+      return {
+        position: 'absolute'
+      }
+    }
+
+    if (position === 'active') {
+      return {
+        position: 'fixed'
+      }
+    }
+  }
+
+  makeColumnStyle () {
+    return {
+      position: 'relative',
+      height: typeof window !== 'undefined'
+        ? this.props.height + window.innerHeight
+        : this.props.height,
+      top: this.props.top
+    }
   }
 
   makeStyle () {
+    debug('make style')
+    const position = this.getPosition()
     return {
       overflow: 'hidden',
-      position: 'absolute',
+      position: position === 'active'
+        ? 'fixed'
+        : 'absolute',
+      top: position === 'bottom'
+        ? this.props.top + this.props.height
+        : this.props.top,
       left: 0,
-      top: 0,
-      height: `${this.props.scrollDistance + window.innerHeight}px`,
+      height: window.innerHeight,
       width: '100vw'
     }
   }
@@ -45,26 +132,6 @@ class ParallaxContainer extends React.Component {
     this.timelines = this.timelines
       ? [...this.timelines, timeline]
       : [timeline]
-  }
-
-  addRegisterProp (children) {
-    debug('adding register prop to', {children})
-    return React.Children.map(
-      children,
-      c => React.cloneElement(c, {registerParallaxElement: this.registerParallaxChild})
-    )
-  }
-
-  timeline () {
-    const timelines = this.timelines
-    return combineTimelines(timelines).duration(1).pause()
-  }
-
-  setupAnimation () {
-    debug('setting up animation')
-    this.animationController = this.timeline()
-    console.log('animationController', this.animationController)
-    this.animationController.seek(0)
   }
 
   seek (keyframe) {
@@ -77,9 +144,16 @@ class ParallaxContainer extends React.Component {
     }
   }
 
-  handleScroll () {
-    debug('running scroll handler')
-    this.seek(100 * window.scrollY / this.props.scrollDistance)
+  setupAnimation () {
+    debug('setting up animation')
+    this.animationController = this.timeline()
+    console.log('animationController', this.animationController)
+    this.animationController.seek(0)
+  }
+
+  timeline () {
+    const timelines = this.timelines
+    return combineTimelines(timelines).duration(1).pause()
   }
 
   componentDidMount () {
@@ -90,11 +164,11 @@ class ParallaxContainer extends React.Component {
 
   render () {
     return (
-      <div style={this.constructor.containerStyle}>
+      <div style={this.makeColumnStyle()}>
         <div {...pickStandardProps(this.props)}
           style={{...this.makeStyle(), ...this.props.style}}
         >
-          {this.addRegisterProp(this.props.children)}
+          {this.addChildProps(this.props.children)}
         </div>
       </div>
     )
