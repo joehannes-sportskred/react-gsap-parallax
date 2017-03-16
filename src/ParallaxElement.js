@@ -18,7 +18,7 @@ export default class ParallaxElement extends React.Component {
     cache: false,
     parallaxStyle: {},
     registerParallaxElement: () => {
-      throw Error('trying to register a parallax child before mount! not cool!')
+      console.warn('trying to register a parallax child before mount! not cool!')
     }
   }
 
