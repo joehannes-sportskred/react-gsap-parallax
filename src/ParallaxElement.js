@@ -9,7 +9,7 @@ export default class ParallaxElement extends React.Component {
     ...standardProps,
     children: React.PropTypes.node,
     keyframes: React.PropTypes.object.isRequired,
-    registerParallaxChild: React.PropTypes.func.isRequired,
+    registerParallaxElement: React.PropTypes.func.isRequired,
     cache: React.PropTypes.bool,
     parallaxStyle: React.PropTypes.object
   }
@@ -17,7 +17,7 @@ export default class ParallaxElement extends React.Component {
   static defaultProps = {
     cache: false,
     parallaxStyle: {},
-    registerParallaxChild: () => {
+    registerParallaxElement: () => {
       throw Error('trying to register a parallax child before mount! not cool!')
     }
   }
