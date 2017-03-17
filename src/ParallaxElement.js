@@ -20,27 +20,30 @@ export default class ParallaxElement extends React.Component {
   }
 
   constructor (props) {
+    debug('construct')
     super(props)
     this.register = this.register.bind(this)
   }
 
   register () {
+    debug('registering parallax element', {state: this.state, props: this.props, element: this.element})
+
     if (!this.props.registerParallaxElement) {
-      console.warn('no registration function! trying again soon.')
-      return setTimeout(this.register, 5)
+      throw Error('ParallaxElement did not receive registerParallaxElement prop. Is it the direct child of a ParallaxContainer?')
     }
 
-    debug('registering parallax element', {state: this.state, props: this.props, element: this.element})
     const { keyframes } = this.props
     const timeline = makeTimeline(keyframes, this.element)
     this.props.registerParallaxElement(timeline)
   }
 
   componentDidMount () {
+    debug('component did mount')
     this.register()
   }
 
   render () {
+    debug('render')
     return (
       <div {...pickStandardProps(this.props)}
         style={{
