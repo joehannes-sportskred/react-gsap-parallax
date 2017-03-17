@@ -4,6 +4,7 @@ import React from 'react'
 import throttle from 'lodash.throttle'
 import { standardProps, pickStandardProps } from './standardProps'
 
+import ParallaxElement from './ParallaxElement'
 import combineTimelines from './combineTimelines'
 
 const getScrollPosition = () =>
@@ -48,11 +49,14 @@ class ParallaxContainer extends React.Component {
   }
 
   addChildProps (children) {
-    debug('adding register prop to', {children})
     return React.Children.map(
       children,
       c => {
-        if (c.type.name !== 'ParallaxElement') return c
+        if (c.type !== ParallaxElement) {
+          debug('not a parallax element, not adding child props')
+          return c
+        }
+        debug('adding child props to', {children})
         return React.cloneElement(c, {
           registerParallaxElement: this.registerParallaxChild,
           parallaxStyle: this.makeChildStyle()
