@@ -16,10 +16,7 @@ export default class ParallaxElement extends React.Component {
 
   static defaultProps = {
     cache: false,
-    parallaxStyle: {},
-    registerParallaxElement: () => {
-      console.warn('trying to register a parallax child before mount! not cool!')
-    }
+    parallaxStyle: {}
   }
 
   constructor (props) {
@@ -28,6 +25,11 @@ export default class ParallaxElement extends React.Component {
   }
 
   register () {
+    if (!this.props.registerParallaxElement) {
+      console.warn('no registration function! trying again soon.')
+      return setTimeout(this.register, 5)
+    }
+
     debug('registering parallax element', {state: this.state, props: this.props, element: this.element})
     const { keyframes } = this.props
     const timeline = makeTimeline(keyframes, this.element)
