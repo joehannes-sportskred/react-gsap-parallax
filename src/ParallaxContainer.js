@@ -6,6 +6,13 @@ import { standardProps, pickStandardProps } from './standardProps'
 
 import combineTimelines from './combineTimelines'
 
+const getScrollPosition = () =>
+  typeof document !== 'undefined'
+    ? document.documentElement
+      ? document.documentElement.scrollTop
+      : document.body.scrollTop
+    : 0
+
 class ParallaxContainer extends React.Component {
   static propTypes = {
     ...standardProps,
@@ -57,11 +64,12 @@ class ParallaxContainer extends React.Component {
     debug('get position')
     const { height, top } = this.props
 
-    if (typeof document === 'undefined') return top
+    if (typeof document === 'undefined') return 'top'
 
-    const scrollPosition = document.body.scrollTop
+    const scrollPosition = getScrollPosition()
     if (scrollPosition < top) return 'top'
     if (scrollPosition > (top + height)) return 'bottom'
+
     return 'active'
   }
 
