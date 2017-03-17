@@ -8,9 +8,10 @@ import combineTimelines from './combineTimelines'
 
 const getScrollPosition = () =>
   typeof document !== 'undefined'
-    ? document.documentElement
-      ? document.documentElement.scrollTop
-      : document.body.scrollTop
+    ? Math.max(
+      document.documentElement.scrollTop || 0,
+      document.body.scrollTop
+    )
     : 0
 
 class ParallaxContainer extends React.Component {
