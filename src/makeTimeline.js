@@ -18,7 +18,7 @@ const checkForBadProperties = (() => {
     }
   )
   const check = R.pipe(
-    Object.values,
+    R.values,
     R.map(Object.keys),
     R.reduce(R.concat, []),
     R.uniq,
