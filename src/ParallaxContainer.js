@@ -1,8 +1,9 @@
 const debug = require('debug')('react-parallax-gsap:ParallaxContainer') // eslint-disable-line
 
+import R from 'ramda'
 import React from 'react'
 import throttle from 'lodash.throttle'
-import { standardProps, pickStandardProps } from './standardProps'
+import { standardProps } from './standardProps'
 
 import ParallaxElement from './ParallaxElement'
 import combineTimelines from './combineTimelines'
@@ -184,7 +185,14 @@ class ParallaxContainer extends React.Component {
   render () {
     return (
       <div style={this.makeColumnStyle()}>
-        <div {...pickStandardProps(this.props)}
+        <div
+          {...R.omit([
+            'children',
+            'top',
+            'height',
+            'scrolljack',
+            'onScroll'
+          ], this.props)}
           style={{...this.makeStyle(), ...this.props.style}}
         >
           {this.addChildProps(this.props.children)}
