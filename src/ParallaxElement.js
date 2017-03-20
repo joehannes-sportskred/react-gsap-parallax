@@ -51,7 +51,6 @@ export default class ParallaxElement extends React.Component {
         {...R.omit([
           'children',
           'keyframes',
-          'registerParallaxElement',
           'cache',
           'parallaxStyle'
         ], this.props)}
