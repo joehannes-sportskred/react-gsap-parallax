@@ -3,6 +3,7 @@ const debug = require('debug')('react-parallax-gsap:ParallaxContainer') // eslin
 import R from 'ramda'
 import React from 'react'
 import throttle from 'lodash.throttle'
+import raf from 'raf'
 import { standardProps } from './standardProps'
 
 import ParallaxElement from './ParallaxElement'
@@ -30,7 +31,7 @@ class ParallaxContainer extends React.Component {
   static defaultProps = {
     scrolljack: false,
     top: 0,
-    scrollableAncestor: window,
+    // scrollableAncestor: window,
     onScroll: x => x
   }
 
@@ -38,7 +39,8 @@ class ParallaxContainer extends React.Component {
     super(props)
     this.addChildProps = this.addChildProps.bind(this)
     this.getPosition = this.getPosition.bind(this)
-    this.handleScroll = throttle(this.handleScroll.bind(this), 16)
+    this.handleScroll = this.handleScroll.bind(this)//throttle(this.handleScroll.bind(this), 16)
+    this.handleScrollDebounce = this.handleScrollDebounce.bind(this)
     this.makeChildStyle = this.makeChildStyle.bind(this)
     this.makeColumnStyle = this.makeColumnStyle.bind(this)
     this.makeStyle = this.makeStyle.bind(this)
@@ -49,6 +51,8 @@ class ParallaxContainer extends React.Component {
     this.state = {
       position: 'top'
     }
+    // scroll debounce ticker
+    this.tick = false
   }
 
   addChildProps (children) {
@@ -81,6 +85,13 @@ class ParallaxContainer extends React.Component {
     return 'active'
   }
 
+  handleScrollDebounce () {
+    if (this.tick) return this
+    this.tick = !this.tick
+    raf(() => this.handleScroll())
+    return this
+  }
+
   handleScroll () {
     debug('running scroll handler')
     const oldPosition = this.state.position
@@ -91,6 +102,8 @@ class ParallaxContainer extends React.Component {
       this.seek(100 * progress)
       this.props.onScroll(progress)
     }
+    this.tick = !this.tick
+    return this
   }
 
   makeChildStyle () {
@@ -177,11 +190,12 @@ class ParallaxContainer extends React.Component {
   componentDidMount () {
     debug('component did mount')
     this.setupAnimation()
-    this.props.scrollableAncestor.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('scroll', this.handleScrollDebounce, true)
   }
 
   componentWillUnmount () {
-    this.props.scrollableAncestor.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('scroll', this.handleScrollDebounce, true)
+    raf.cancel(this.handleScroll)
   }
 
   render () {
