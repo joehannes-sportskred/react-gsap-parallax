@@ -23,12 +23,14 @@ class ParallaxContainer extends React.Component {
     top: React.PropTypes.number,
     height: React.PropTypes.number.isRequired,
     scrolljack: React.PropTypes.bool,
-    onScroll: React.PropTypes.func
+    onScroll: React.PropTypes.func,
+    scrollableAncestor: React.PropTypes.node
   }
 
   static defaultProps = {
     scrolljack: false,
     top: 0,
+    scrollableAncestor: window,
     onScroll: x => x
   }
 
@@ -175,11 +177,11 @@ class ParallaxContainer extends React.Component {
   componentDidMount () {
     debug('component did mount')
     this.setupAnimation()
-    window.addEventListener('scroll', this.handleScroll)
+    this.props.scrollableAncestor.addEventListener('scroll', this.handleScroll)
   }
 
   componentWillUnmount () {
-    window.removeEventListener('scroll', this.handleScroll)
+    this.props.scrollableAncestor.removeEventListener('scroll', this.handleScroll)
   }
 
   render () {
