@@ -21,9 +21,13 @@ static propTypes = {
   children: React.PropTypes.node.isRequired,
   className: React.PropTypes.string,
   id: React.PropTypes.string,
-  scrollDistance: React.PropTypes.number.isRequired,
+  style: React.PropTypes.object,
+  children: React.PropTypes.node.isRequired,
+  top: React.PropTypes.number,
+  height: React.PropTypes.number.isRequired,
   scrolljack: React.PropTypes.bool,
-  style: React.PropTypes.object
+  onScroll: React.PropTypes.func,
+  scrollableAncestor: React.PropTypes.node
 }
 static defaultProps = {
   scrolljack: false
@@ -32,11 +36,7 @@ static defaultProps = {
 
 If scrolljack is set, the scrollhandler will use [TimelineMax.tweenTo](https://greensock.com/docs/#/HTML5/GSAP/TimelineMax/tweenTo/) rather than [TimelineMax.seek](https://greensock.com/docs/#/HTML5/GSAP/TimelineMax/seek/).
 
-If scrolljack is set to something other than 'true', it's value will be passed into the tweenTo function, for example:
-
-```javascript
-scrolljack={{ease: 'Strong'}}
-```
+The parallax container can be positioned down the page--not necessarily at the top. Use the `top` and `height` props to control its position.
 
 ## Parallax
 
