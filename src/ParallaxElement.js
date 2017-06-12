@@ -2,6 +2,7 @@ const debug = require('debug')('react-gsap-parallax:parallaxElement')
 
 import R from 'ramda'
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import makeTimeline from './makeTimeline'
 import { standardProps } from './standardProps'
@@ -9,11 +10,11 @@ import { standardProps } from './standardProps'
 export default class ParallaxElement extends React.Component {
   static propTypes = {
     ...standardProps,
-    children: React.PropTypes.node,
-    keyframes: React.PropTypes.object.isRequired,
-    registerParallaxElement: React.PropTypes.func,
-    cache: React.PropTypes.bool,
-    parallaxStyle: React.PropTypes.object,
+    children: PropTypes.node,
+    keyframes: PropTypes.object.isRequired,
+    registerParallaxElement: PropTypes.func,
+    cache: PropTypes.bool,
+    parallaxStyle: PropTypes.object,
   }
 
   static defaultProps = {

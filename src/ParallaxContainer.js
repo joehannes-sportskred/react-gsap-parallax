@@ -4,8 +4,9 @@ import R from 'ramda'
 import React from 'react'
 import throttle from 'lodash.throttle'
 import raf from 'raf'
-import { standardProps } from './standardProps'
+import PropTypes from 'prop-types'
 
+import { standardProps } from './standardProps'
 import ParallaxElement from './ParallaxElement'
 import combineTimelines from './combineTimelines'
 
@@ -17,12 +18,12 @@ const getScrollPosition = () =>
 class ParallaxContainer extends React.Component {
   static propTypes = {
     ...standardProps,
-    children: React.PropTypes.node.isRequired,
-    top: React.PropTypes.number,
-    height: React.PropTypes.number.isRequired,
-    scrolljack: React.PropTypes.bool,
-    onScroll: React.PropTypes.func,
-    scrollableAncestor: React.PropTypes.node,
+    children: PropTypes.node.isRequired,
+    top: PropTypes.number,
+    height: PropTypes.number.isRequired,
+    scrolljack: PropTypes.bool,
+    onScroll: PropTypes.func,
+    scrollableAncestor: PropTypes.node,
   }
 
   static defaultProps = {
