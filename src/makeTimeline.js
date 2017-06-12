@@ -4,45 +4,6 @@ import R from 'ramda'
 
 import normalizeKeyframes from './normalizeKeyframes'
 
-const checkForBadProperties = (() => {
-  const badProperties = [
-    'fontSize',
-    'margin',
-    'marginTop',
-    'marginLeft',
-    'marginRight',
-    'marginBottom',
-    'padding',
-    'paddingTop',
-    'paddingLeft',
-    'paddingRight',
-    'paddingBottom',
-    'top',
-    'left',
-    'right',
-    'bottom',
-    'width',
-    'height',
-  ]
-  const warn = R.memoize(prop => {
-    console.warn(`${prop} animates slowly. Use a transform instead`)
-  })
-  const check = R.pipe(
-    R.values,
-    R.map(Object.keys),
-    R.reduce(R.concat, []),
-    R.uniq,
-    R.filter(v => R.contains(v, badProperties)),
-    R.forEach(warn),
-  )
-
-  const checkOnce = R.memoize(check)
-
-  const checkOffThread = keyframes => setTimeout(() => checkOnce(keyframes), 0)
-
-  return checkOffThread
-})()
-
 /**
  * Turn a keyframes object into a gsap timeline
  *
@@ -54,7 +15,6 @@ const checkForBadProperties = (() => {
  */
 
 const makeTimeline = R.curry((keyframes, element) => {
-  checkForBadProperties(keyframes)
   const normalizedKeyframeArray = normalizeKeyframes(keyframes)
   const [head, ...tail] = normalizedKeyframeArray
   debug('making timeline', { head, tail, keyframes, normalizedKeyframeArray })
