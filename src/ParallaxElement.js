@@ -11,7 +11,7 @@ export default class ParallaxElement extends React.Component {
     ...standardProps,
     children: React.PropTypes.node,
     keyframes: React.PropTypes.object.isRequired,
-    registerParallaxElement: React.PropTypes.func.isRequired,
+    registerParallaxElement: React.PropTypes.func,
     cache: React.PropTypes.bool,
     parallaxStyle: React.PropTypes.object,
   }
