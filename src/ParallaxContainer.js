@@ -2,7 +2,6 @@ const debug = require('debug')('react-parallax-gsap:ParallaxContainer') // eslin
 
 import R from 'ramda'
 import React from 'react'
-import throttle from 'lodash.throttle'
 import raf from 'raf'
 import PropTypes from 'prop-types'
 
@@ -37,7 +36,7 @@ class ParallaxContainer extends React.Component {
     super(props)
     this.addChildProps = this.addChildProps.bind(this)
     this.getPosition = this.getPosition.bind(this)
-    this.handleScroll = this.handleScroll.bind(this) //throttle(this.handleScroll.bind(this), 16)
+    this.handleScroll = this.handleScroll.bind(this)
     this.handleScrollDebounce = this.handleScrollDebounce.bind(this)
     this.makeChildStyle = this.makeChildStyle.bind(this)
     this.makeColumnStyle = this.makeColumnStyle.bind(this)
