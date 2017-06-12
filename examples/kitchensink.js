@@ -9,8 +9,8 @@ export default () => (
     <Parallax
       style={{ top: '75vh' }}
       keyframes={{
-        '0%': { left: 0, easeIn: Linear.easeNone },
-        '100%': { left: '100vw', easeOut: Linear.easeNone },
+        '0%': { left: 0, ease: 'Linear.easeNone' },
+        '100%': { left: '100vw', ease: 'Linear.easeNone' },
       }}
     >
       <div>
@@ -21,8 +21,8 @@ export default () => (
     <Parallax
       style={{ top: '75vh' }}
       keyframes={{
-        '0%': { left: 0, easeIn: Strong },
-        '100%': { left: '100vw', easeOut: Strong },
+        '0%': { left: 0, ease: 'Strong' },
+        '100%': { left: '100vw', ease: 'Strong' },
       }}
     >
       <div>
