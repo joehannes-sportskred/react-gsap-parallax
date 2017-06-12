@@ -59,6 +59,3 @@ keyframes={{
 '100%': {top: '0vh', left: 0, fontSize: '36px'}
 }}
 ```
-
-
-

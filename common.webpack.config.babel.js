@@ -3,12 +3,12 @@ import {
   addExtern,
   addSourcemap,
   addBabel,
-  addProgress
+  addProgress,
 } from '@amonks/webpack-helpers'
 
 const addExterns = R.pipe(
   addExtern('react', 'React'),
-  addExtern('react', 'React')
+  addExtern('react', 'React'),
   // addExtern('TimelineLite'),
   // addExtern('TimelineMax'),
   // addAlias('TimelineLite', 'gsap/TimelineLite.js'),
@@ -22,12 +22,6 @@ const addExterns = R.pipe(
   // }),
 )
 
-const common = R.pipe(
-  addExterns,
-  addSourcemap,
-  addBabel,
-  addProgress,
-)
+const common = R.pipe(addExterns, addSourcemap, addBabel, addProgress)
 
 export default common
-

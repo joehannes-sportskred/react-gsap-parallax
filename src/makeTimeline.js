@@ -7,23 +7,33 @@ import normalizeKeyframes from './normalizeKeyframes'
 const checkForBadProperties = (() => {
   const badProperties = [
     'fontSize',
-    'margin', 'marginTop', 'marginLeft', 'marginRight', 'marginBottom',
-    'padding', 'paddingTop', 'paddingLeft', 'paddingRight', 'paddingBottom',
-    'top', 'left', 'right', 'bottom',
-    'width', 'height'
+    'margin',
+    'marginTop',
+    'marginLeft',
+    'marginRight',
+    'marginBottom',
+    'padding',
+    'paddingTop',
+    'paddingLeft',
+    'paddingRight',
+    'paddingBottom',
+    'top',
+    'left',
+    'right',
+    'bottom',
+    'width',
+    'height',
   ]
-  const warn = R.memoize(
-    prop => {
-      console.warn(`${prop} animates slowly. Use a transform instead`)
-    }
-  )
+  const warn = R.memoize(prop => {
+    console.warn(`${prop} animates slowly. Use a transform instead`)
+  })
   const check = R.pipe(
     R.values,
     R.map(Object.keys),
     R.reduce(R.concat, []),
     R.uniq,
     R.filter(v => R.contains(v, badProperties)),
-    R.forEach(warn)
+    R.forEach(warn),
   )
 
   const checkOnce = R.memoize(check)
@@ -43,28 +53,28 @@ const checkForBadProperties = (() => {
  * @return {TimelineLite} timeline - duration 100
  */
 
-const makeTimeline = R.curry(
-  (keyframes, element) => {
-    checkForBadProperties(keyframes)
-    const normalizedKeyframeArray = normalizeKeyframes(keyframes)
-    const [head, ...tail] = normalizedKeyframeArray
-    debug('making timeline', {head, tail, keyframes, normalizedKeyframeArray})
-    return tail.reduce(
-      (timeline, keyframe, index) => {
-        const {value: {cache, ...value}} = keyframe
-        const previousKeyframe = normalizedKeyframeArray[index]
-        debug('adding keyframe to timeline', {previousKeyframe, value, element, keyframe})
-        if (cache) {
-          return timeline.to(element, previousKeyframe.duration, value)
-            .to(element, 0, {willChange: 'transform'})
-        } else {
-          return timeline.to(element, previousKeyframe.duration, value)
-        }
-      },
-      new TimelineLite().to(element, 0, head.value)
-    )
-  }
-)
+const makeTimeline = R.curry((keyframes, element) => {
+  checkForBadProperties(keyframes)
+  const normalizedKeyframeArray = normalizeKeyframes(keyframes)
+  const [head, ...tail] = normalizedKeyframeArray
+  debug('making timeline', { head, tail, keyframes, normalizedKeyframeArray })
+  return tail.reduce((timeline, keyframe, index) => {
+    const { value: { cache, ...value } } = keyframe
+    const previousKeyframe = normalizedKeyframeArray[index]
+    debug('adding keyframe to timeline', {
+      previousKeyframe,
+      value,
+      element,
+      keyframe,
+    })
+    if (cache) {
+      return timeline
+        .to(element, previousKeyframe.duration, value)
+        .to(element, 0, { willChange: 'transform' })
+    } else {
+      return timeline.to(element, previousKeyframe.duration, value)
+    }
+  }, new TimelineLite().to(element, 0, head.value))
+})
 
 export default makeTimeline
-

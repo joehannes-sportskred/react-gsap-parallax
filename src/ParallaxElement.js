@@ -13,25 +13,31 @@ export default class ParallaxElement extends React.Component {
     keyframes: React.PropTypes.object.isRequired,
     registerParallaxElement: React.PropTypes.func.isRequired,
     cache: React.PropTypes.bool,
-    parallaxStyle: React.PropTypes.object
+    parallaxStyle: React.PropTypes.object,
   }
 
   static defaultProps = {
     cache: false,
-    parallaxStyle: {}
+    parallaxStyle: {},
   }
 
-  constructor (props) {
+  constructor(props) {
     debug('construct')
     super(props)
     this.register = this.register.bind(this)
   }
 
-  register () {
-    debug('registering parallax element', {state: this.state, props: this.props, element: this.element})
+  register() {
+    debug('registering parallax element', {
+      state: this.state,
+      props: this.props,
+      element: this.element,
+    })
 
     if (!this.props.registerParallaxElement) {
-      throw Error('ParallaxElement did not receive registerParallaxElement prop. Is it the direct child of a ParallaxContainer?')
+      throw Error(
+        'ParallaxElement did not receive registerParallaxElement prop. Is it the direct child of a ParallaxContainer?',
+      )
     }
 
     const { keyframes } = this.props
@@ -39,31 +45,30 @@ export default class ParallaxElement extends React.Component {
     this.props.registerParallaxElement(timeline)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     debug('component did mount')
     this.register()
   }
 
-  render () {
+  render() {
     debug('render')
     return (
       <div
-        {...R.omit([
-          'children',
-          'keyframes',
-          'cache',
-          'parallaxStyle'
-        ], this.props)}
+        {...R.omit(
+          ['children', 'keyframes', 'cache', 'parallaxStyle'],
+          this.props,
+        )}
         style={{
           ...this.props.style,
           ...this.props.parallaxStyle,
-          ...{ willCache: this.props.cache ? 'transform' : 'auto' }
+          ...{ willCache: this.props.cache ? 'transform' : 'auto' },
         }}
-        ref={element => { this.element = element }}
+        ref={element => {
+          this.element = element
+        }}
       >
         {this.props.children}
       </div>
     )
   }
 }
-

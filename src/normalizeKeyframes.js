@@ -46,7 +46,7 @@ const toObjects = _keyframes => {
   return keyframes.map(([key, value]) => ({
     key,
     value,
-    duration: 0
+    duration: 0,
   }))
 }
 
@@ -56,13 +56,13 @@ const addDurations = _keyframes => {
     if (index === keyframes.length - 1) {
       return {
         ...keyframe,
-        duration: 0
+        duration: 0,
       }
     } else {
       const next = keyframes[index + 1]
       return {
         ...keyframe,
-        duration: next.key - keyframe.key
+        duration: next.key - keyframe.key,
       }
     }
   })
@@ -79,30 +79,21 @@ const log = msg => R.tap(v => debug(msg, v))
 
 const normalizeKeyframes = R.pipe(
   log('normalizing'),
-
   R.toPairs,
   log('made pairs'),
-
   R.map(R.adjust(parseFloat, 0)),
   log('made float'),
-
   sort,
   log('sorted'),
-
   checkDomain,
   log('validated domain'),
-
   addEnds,
   log('added ends'),
-
   toObjects,
   log('made objects'),
-
   addDurations,
   log('added durations'),
-
-  log('normalized')
+  log('normalized'),
 )
 
 export default normalizeKeyframes
-
