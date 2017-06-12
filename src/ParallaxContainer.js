@@ -172,7 +172,6 @@ class ParallaxContainer extends React.Component {
   setupAnimation() {
     debug('setting up animation')
     this.animationController = this.timeline()
-    console.log('animationController', this.animationController)
     this.animationController.seek(0)
   }
 
