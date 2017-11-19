@@ -1,9 +1,9 @@
 {
   "name": "react-gsap-parallax",
-  "version": "0.0.0-development",
+  "version": "3.0.0",
   "description": "react-gsap-parallax React component",
-  "main": "umd/react-gsap-parallax.js",
-  "module": "es/react-gsap-parallax.js",
+  "main": "src/react-gsap-parallax.js",
+  "module": "src/react-gsap-parallax.js",
   "files": [
     "es",
     "lib",
