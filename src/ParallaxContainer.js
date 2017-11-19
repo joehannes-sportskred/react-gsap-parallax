@@ -9,10 +9,11 @@ import { standardProps } from './standardProps'
 import ParallaxElement from './ParallaxElement'
 import combineTimelines from './combineTimelines'
 
-const getScrollPosition = () =>
-  (typeof document !== 'undefined'
-    ? Math.max(document.documentElement.scrollTop || 0, document.body.scrollTop)
-    : 0)
+const getScrollPosition = () => {
+  return (typeof document !== 'undefined') ?
+    Math.max(document.documentElement.scrollTop || 0, document.body.scrollTop)
+    : 0;
+};
 
 class ParallaxContainer extends React.Component {
   static propTypes = {
